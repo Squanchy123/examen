@@ -1,0 +1,164 @@
+EJERCICIO 1
+//c++
+#include <iostream>
+
+int main() {
+    long long int sum = 0;
+    long long int num = 10;
+    long long int mult = 1;
+    
+    for (int i = 1; i <= 5; ++i) {
+        for (int j = 0; j < i; ++j) {
+            mult *= num;
+            num += 10;
+        }
+        sum += mult;
+    }
+
+    std::cout << "La suma de la serie es: " << sum << std::endl;
+
+    return 0;
+}
+//PYTHON
+
+sum = 0
+num = 10
+mult = 1
+
+for i in range(1, 6):
+    for j in range(i):
+        mult *= num
+        num += 10
+    sum += mult
+
+print("La suma de la serie es:", sum)
+
+EJERCICIO 2 
+//C++
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <algorithm>
+
+const int NUM_PRODUCTOS = 5;
+const int NUM_CARACTERISTICAS = 3;
+
+// Función para generar un nombre aleatorio para un producto
+std::string generarNombre() {
+    std::string nombres[] = {"Producto1", "Producto2", "Producto3", "Producto4", "Producto5"};
+    return nombres[rand() % 5];
+}
+
+// Función para inicializar el inventario con datos aleatorios
+void inicializarInventario(std::string inventario[][NUM_CARACTERISTICAS]) {
+    srand(time(nullptr));
+    for (int i = 0; i < NUM_PRODUCTOS; ++i) {
+        inventario[i][0] = generarNombre();
+        inventario[i][1] = std::to_string(rand() % 100 + 1); // Precio entre 1 y 100
+        inventario[i][2] = std::to_string(rand() % 10 + 1);  // Cantidad en stock entre 1 y 10
+    }
+}
+
+// Función para calcular el valor total del inventario
+int calcularValorTotal(std::string inventario[][NUM_CARACTERISTICAS]) {
+    int valorTotal = 0;
+    for (int i = 0; i < NUM_PRODUCTOS; ++i) {
+        int precio = std::stoi(inventario[i][1]);
+        int cantidad = std::stoi(inventario[i][2]);
+        valorTotal += precio * cantidad;
+    }
+    return valorTotal;
+}
+
+// Función de comparación para ordenar los productos por precio de mayor a menor
+bool compararPorPrecio(const std::string& a[], const std::string& b[]) {
+    return std::stoi(a[1]) > std::stoi(b[1]);
+}
+
+// Función para encontrar el producto con el precio más alto y más bajo
+void encontrarExtremosPrecio(std::string inventario[][NUM_CARACTERISTICAS], std::string& productoMasAlto, std::string& productoMasBajo) {
+    productoMasAlto = inventario[0][0];
+    productoMasBajo = inventario[0][0];
+    int precioMasAlto = std::stoi(inventario[0][1]);
+    int precioMasBajo = std::stoi(inventario[0][1]);
+    for (int i = 1; i < NUM_PRODUCTOS; ++i) {
+        int precio = std::stoi(inventario[i][1]);
+        if (precio > precioMasAlto) {
+            precioMasAlto = precio;
+            productoMasAlto = inventario[i][0];
+        }
+        if (precio < precioMasBajo) {
+            precioMasBajo = precio;
+            productoMasBajo = inventario[i][0];
+        }
+    }
+}
+
+// Proceso para imprimir todos los datos de los productos, el valor total del inventario y los productos con el precio más alto y más bajo
+void imprimirInventario(std::string inventario[][NUM_CARACTERISTICAS], int valorTotal, std::string productoMasAlto, std::string productoMasBajo) {
+    std::cout << "Inventario de la tienda:\n";
+    for (int i = 0; i < NUM_PRODUCTOS; ++i) {
+        std::cout << "Producto: " << inventario[i][0] << ", Precio: $" << inventario[i][1] << ", Stock: " << inventario[i][2] << std::endl;
+    }
+
+    std::cout << "\nValor total del inventario: $" << valorTotal << std::endl;
+    std::cout << "Producto con el precio más alto: " << productoMasAlto << std::endl;
+    std::cout << "Producto con el precio más bajo: " << productoMasBajo << std::endl;
+}
+
+int main() {
+    std::string inventario[NUM_PRODUCTOS][NUM_CARACTERISTICAS];
+    std::string productoMasAlto, productoMasBajo;
+
+    inicializarInventario(inventario);
+    int valorTotal = calcularValorTotal(inventario);
+
+    std::sort(inventario, inventario + NUM_PRODUCTOS, compararPorPrecio);
+    encontrarExtremosPrecio(inventario, productoMasAlto, productoMasBajo);
+
+    imprimirInventario(inventario, valorTotal, productoMasAlto, productoMasBajo);
+
+    return 0;
+}
+
+//PYTHON
+
+# Función para calcular el valor total del inventario
+def calcular_valor_total(inventario):
+    valor_total = 0
+    for producto in inventario:
+        precio = producto[1]
+        cantidad = producto[2]
+        valor_total += precio * cantidad
+    return valor_total
+
+# Función para ordenar los productos por precio de mayor a menor
+def comparar_por_precio(producto):
+    return producto[1]
+
+# Función para encontrar el producto con el precio más alto y más bajo
+def encontrar_extremos_precio(inventario):
+    producto_mas_alto = max(inventario, key=lambda x: x[1])[0]
+    producto_mas_bajo = min(inventario, key=lambda x: x[1])[0]
+    return producto_mas_alto, producto_mas_bajo
+
+# Proceso para imprimir todos los datos de los productos, el valor total del inventario y los productos con el precio más alto y más bajo
+def imprimir_inventario(inventario, valor_total, producto_mas_alto, producto_mas_bajo):
+    print("Inventario de la tienda:")
+    for producto in inventario:
+        print("Producto:", producto[0], ", Precio: $", producto[1], ", Stock:", producto[2])
+
+    print("\nValor total del inventario: $", valor_total)
+    print("Producto con el precio más alto:", producto_mas_alto)
+    print("Producto con el precio más bajo:", producto_mas_bajo)
+
+def main():
+    inventario = inicializar_inventario()
+    valor_total = calcular_valor_total(inventario)
+    inventario.sort(key=comparar_por_precio, reverse=True)
+    producto_mas_alto, producto_mas_bajo = encontrar_extremos_precio(inventario)
+    imprimir_inventario(inventario, valor_total, producto_mas_alto, producto_mas_bajo)
+
+if __name__ == "__main__":
+    main()
+
